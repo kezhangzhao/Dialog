@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +38,9 @@ public class DialogCreate extends Dialog {
     private int transparency;
     private LinearLayout ll_dialog_view;
     private RelativeLayout rlAllDialogLayout;
+    //titleHeight 标题栏高度(这个参数已经无效，setTitleHeight()方法已经被注销掉，
+    // 需要通过主mould设置  <dimen name="title_bar_height">44dp</dimen>，不然会报错)
+    private float titleHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class DialogCreate extends Dialog {
         this.transparency = builder.transparency;
         this.isCloseDialogInSide = builder.isCloseDialogInSide;
         this.isBackKeyCancelable = builder.isBackKeyCancelable;
+        this.titleHeight = builder.titleHeight;
     }
 
     /**
@@ -88,18 +93,20 @@ public class DialogCreate extends Dialog {
         if (getWindow() != null) {
             View view = getWindow().getLayoutInflater().inflate(R.layout.dialog_textlist_final_dismiss, null);
             ivClose = view.findViewById(R.id.iv_close);
-            LinearLayout lladdview = view.findViewById(R.id.ll_add_textview);
+            LinearLayout llAddView = view.findViewById(R.id.ll_add_textview);
             ll_dialog_view = view.findViewById(R.id.ll_dialog_view);
+//            setTitleHeight();
             rlAllDialogLayout = view.findViewById(R.id.rl_all_dialog_layout);
             if (!isCloseDialogInSide) {
-                lladdview.setOnClickListener(v -> {
+                llAddView.setOnClickListener(v -> {
 
                 });
             }
-            View inflaterView = LayoutInflater.from(mContext).inflate(addViewId, lladdview, false);
+            View inflaterView = LayoutInflater.from(mContext).inflate(addViewId, llAddView, false);
             this.inflaterView = inflaterView;
-            lladdview.addView(inflaterView);
+            llAddView.addView(inflaterView);
             setContentView(view);
+            getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
     }
 
@@ -129,6 +136,27 @@ public class DialogCreate extends Dialog {
             rlAllDialogLayout.setOnClickListener(new MyOnClickListener());
         }
         setCancelable(isBackKeyCancelable);
+    }
+
+    /**
+     * 设置标题栏高度
+     */
+    private void setTitleHeight() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, dp2px(titleHeight), 0, 0);
+        ll_dialog_view.setPadding(0, 0, 0, dp2px(titleHeight));
+        ll_dialog_view.setLayoutParams(params);
+    }
+
+    /**
+     * dp转化成px
+     *
+     * @param dpValue dp
+     * @return px
+     */
+    private int dp2px(float dpValue) {
+        float scale = mContext.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
     /**
@@ -182,6 +210,7 @@ public class DialogCreate extends Dialog {
         private int transparency;//透明度0~255透明度值 ，0为完全透明，255为不透明
         private boolean isCloseDialogInSide;//点击弹窗内面是否关闭弹窗
         private boolean isBackKeyCancelable = true;//点击物理返回键是否可以关闭弹窗。
+        private float titleHeight = 44;//标题栏高度
 
         public Builder(Context context) {
             this.mContext = context;
@@ -279,6 +308,17 @@ public class DialogCreate extends Dialog {
          */
         public Builder setIsBackKeyCancelable(boolean isClose) {
             this.isBackKeyCancelable = isClose;
+            return this;
+        }
+
+        /**
+         * 设置标题栏高度
+         *
+         * @param titleHeight 高度dp
+         * @return 返回Builder
+         */
+        public Builder setTitleHeight(float titleHeight) {
+            this.titleHeight = titleHeight;
             return this;
         }
 

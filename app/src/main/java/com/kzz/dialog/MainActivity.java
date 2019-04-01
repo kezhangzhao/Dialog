@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mDialogCreate = builder
                 .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsHasCloseView(false)
+                .setTransparency(150)
                 .setDialogSetDateInterface(inflaterView -> {
                     TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
                     TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);

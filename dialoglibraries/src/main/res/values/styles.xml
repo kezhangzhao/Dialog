@@ -17,6 +17,7 @@
         <!-- Activity背景色透明度 -->
     </style>
     <style name="AlertDialog2" parent="@android:style/Theme.Dialog">
+
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->
         <item name="android:windowIsFloating">true</item>
