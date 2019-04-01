@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mDialogCreate = builder
                 .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsHasCloseView(false)
-                .setTransparency(150)
+//                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
                 .setDialogSetDateInterface(inflaterView -> {
                     TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
                     TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
