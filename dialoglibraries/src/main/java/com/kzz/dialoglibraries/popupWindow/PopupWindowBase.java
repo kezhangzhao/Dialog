@@ -24,6 +24,7 @@ public class PopupWindowBase {
     private Context mContext;
     private View parentView;
     private int addViewId;
+    private int backgroundResource = R.color.blace_66000000;
 
     protected DialogSetDateInterface callback;
     protected DialogShowingInterface showingInterface;
@@ -42,6 +43,14 @@ public class PopupWindowBase {
 
     public void setShowingInterface(DialogShowingInterface showingInterface) {
         this.showingInterface = showingInterface;
+    }
+
+    public int getBackgroundResource() {
+        return backgroundResource;
+    }
+
+    public void setBackgroundResource(int backgroundResource) {
+        this.backgroundResource = backgroundResource;
     }
 
     /**
@@ -66,6 +75,7 @@ public class PopupWindowBase {
         if (getCallback() != null)
             getCallback().setDate(inflaterView);
         llBaseView.addView(inflaterView);
+        llBaseView.setBackgroundResource(backgroundResource);
         llBaseView.setOnClickListener(v -> dismiss());
         // 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
         popupWindow.setFocusable(true);

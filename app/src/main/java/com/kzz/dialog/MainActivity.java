@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             tv003.setOnClickListener(view -> Toast.makeText(mActivity, "tv003", Toast.LENGTH_SHORT).show());
 
         };
+//        popupWindowBase.setBackgroundResource(R.color.blace_00000000);
         popupWindowBase.setShowingInterface(isShowing -> {
             if (isShowing) {
                 Toast.makeText(mActivity, "显示PopupWindow", Toast.LENGTH_SHORT).show();
