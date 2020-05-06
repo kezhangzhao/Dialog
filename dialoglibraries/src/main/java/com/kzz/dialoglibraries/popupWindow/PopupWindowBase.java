@@ -75,7 +75,7 @@ public class PopupWindowBase {
         if (getCallback() != null)
             getCallback().setDate(inflaterView);
         llBaseView.addView(inflaterView);
-        llBaseView.setBackgroundResource(backgroundResource);
+        llBaseView.setBackgroundResource(getBackgroundResource());
         llBaseView.setOnClickListener(v -> dismiss());
         // 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
         popupWindow.setFocusable(true);
