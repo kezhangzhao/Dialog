@@ -36,6 +36,7 @@ public class DialogFragmentBottom extends DialogFragment {
     private boolean isVisitCancel;//是否显示取消按钮,默认情况是显示
     private View.OnClickListener cancelListener;//取消按钮监听事件，默认情况是只取消dialog
     private TextView tv_cancel;//取消按钮控件
+    private boolean isShow;
 
     /**
      * 构造方法
