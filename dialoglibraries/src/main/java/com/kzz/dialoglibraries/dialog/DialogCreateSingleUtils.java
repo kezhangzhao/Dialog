@@ -5,7 +5,6 @@ package com.kzz.dialoglibraries.dialog;
  * time   : 2018/12/10
  * desc   : 防止弹出多个dialog，使用单例模式。
  */
-
 public class DialogCreateSingleUtils {
 
     private static DialogCreateSingleUtils instance = null;
@@ -21,6 +20,7 @@ public class DialogCreateSingleUtils {
         }
         return instance;
     }
+
     void showDialogMsg(DialogCreate dialog) {
         if (mDialogCreate == null || !mDialogCreate.isShowing())
             mDialogCreate = dialog;

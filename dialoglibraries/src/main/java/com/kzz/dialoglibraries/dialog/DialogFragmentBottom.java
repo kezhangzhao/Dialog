@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,6 +115,13 @@ public class DialogFragmentBottom extends DialogFragment {
         public void onClick(View v) {
             dismiss();
         }
+    }
+
+    /**
+     * 使用单例模式弹出
+     */
+    public void showSingle(@NonNull FragmentManager manager, @Nullable String tag) {
+        DialogFragmentBottomSingleUtils.getInstance().showDialogMsg(this,manager,tag);
     }
 
     /**
