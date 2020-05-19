@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.dialog.DialogCreate;
+import com.kzz.dialoglibraries.dialog.DialogFragmentBottom;
 import com.kzz.dialoglibraries.popupWindow.PopupWindowBase;
 
 
@@ -16,9 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btDialog;
     private Button btPopupWindow;
+    private Button btDialogBottom;
     private Activity mActivity;
 
     private DialogCreate mDialogCreate;
+    private DialogFragmentBottom mDialogBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
         this.mActivity = this;
         btDialog = findViewById(R.id.bt_dialog);
         btPopupWindow = findViewById(R.id.bt_popup_window);
+        btDialogBottom = findViewById(R.id.bt_dialog_bottom);
         btDialog.setOnClickListener(view -> showNoNetworkDialog());
         btPopupWindow.setOnClickListener(view -> showPopupWindow());
+        btDialogBottom.setOnClickListener(view -> showDialogBottom());
     }
 
     /**
@@ -56,6 +61,30 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
         mDialogCreate.showSingle();
+    }
+
+    private void showDialogBottom() {
+        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder(mActivity);
+        mDialogBottom = builder
+                .setAddViewId(R.layout.dialog_contact_phone)
+                .setIsVisitCancel(false)
+//                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
+                .setDialogSetDateInterface(inflaterView -> {
+                    TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
+                    TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
+                    TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
+                    tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
+                    tvConfirm.setOnClickListener(v -> {
+                        mDialogCreate.dismiss();
+                        Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
+                    });
+                    tvCancel.setOnClickListener(v -> {
+                        mDialogCreate.dismiss();
+                        Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .build();
+        mDialogBottom.showSingle(getSupportFragmentManager(),"MainActivity");
     }
 
     /**

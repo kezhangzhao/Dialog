@@ -21,4 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="PopupWindow" />
+    <Button
+        android:id="@+id/bt_dialog_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="DialogFragmentBottom" />
 </LinearLayout>

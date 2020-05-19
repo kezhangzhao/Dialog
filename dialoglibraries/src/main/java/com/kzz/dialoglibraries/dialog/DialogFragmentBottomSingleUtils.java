@@ -26,9 +26,10 @@ public class DialogFragmentBottomSingleUtils {
     }
     void showDialogMsg(DialogFragmentBottom dialog, @NonNull FragmentManager manager, @Nullable String tag) {
         if (mDialogFragmentBottom == null || mDialogFragmentBottom.getDialog()==null
-                ||!mDialogFragmentBottom.getDialog().isShowing())
+                ||!mDialogFragmentBottom.getDialog().isShowing()) {
             mDialogFragmentBottom = dialog;
-        mDialogFragmentBottom.show(manager,tag);
+            mDialogFragmentBottom.show(manager, tag);
+        }
     }
 
 }
