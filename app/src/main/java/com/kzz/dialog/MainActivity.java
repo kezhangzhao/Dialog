@@ -1,8 +1,11 @@
 package com.kzz.dialog;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +14,7 @@ import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.dialog.DialogCreate;
 import com.kzz.dialoglibraries.dialog.DialogFragmentBottom;
 import com.kzz.dialoglibraries.popupWindow.PopupWindowBase;
+import com.kzz.dialoglibraries.utils.ScreenUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mDialogCreate = builder
                 .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsHasCloseView(false)
+                .setDialogWidth((float) (ScreenUtils.getScreenWidth(this) - ScreenUtils.dp2px(this, 60)) / ScreenUtils.getScreenWidth(this))
 //                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
                 .setDialogSetDateInterface(inflaterView -> {
                     TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 })
                 .build();
-        mDialogBottom.showSingle(getSupportFragmentManager(),"MainActivity");
+        mDialogBottom.showSingle(getSupportFragmentManager(), "MainActivity");
     }
 
     /**
@@ -111,5 +116,19 @@ public class MainActivity extends AppCompatActivity {
         });
         popupWindowBase.setCallback(dialogSetDateInterface);
         popupWindowBase.create();
+    }
+
+    /**
+     * 获得屏幕宽度
+     *
+     * @param context context
+     * @return 屏幕宽度
+     */
+    private int getScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        if (wm != null)
+            wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.widthPixels;
     }
 }
