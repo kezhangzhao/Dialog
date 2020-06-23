@@ -2,10 +2,9 @@ package com.kzz.dialoglibraries.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,7 @@ import com.kzz.dialoglibraries.utils.ScreenUtils;
 
 public class DialogCreate extends Dialog {
 
-    private Context mContext;//上下文
+    private Activity mActivity;//上下文
     private int addViewId;//插入的view的id
     private View inflaterView;//插入的view
     private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
@@ -56,14 +55,14 @@ public class DialogCreate extends Dialog {
     /**
      * 构造方法
      *
-     * @param context          上下文环境
+     * @param mActivity          上下文环境
      * @param addViewId        自定义的布局，将此布局插入到dialog中显示
      * @param setDateInterface 设置：插入布局中的控件、数据更改显示
      * @param isHasCloseView   是否要底部的关闭按钮
      */
-    public DialogCreate(@NonNull Context context, int addViewId, boolean isHasCloseView, DialogSetDateInterface setDateInterface) {
-        super(context, R.style.AlertDialog);
-        this.mContext = context;
+    public DialogCreate(@NonNull Activity mActivity, int addViewId, boolean isHasCloseView, DialogSetDateInterface setDateInterface) {
+        super(mActivity, R.style.AlertDialog);
+        this.mActivity = mActivity;
         this.addViewId = addViewId;
         this.dialogSetDateInterface = setDateInterface;
         this.isHasCloseView = isHasCloseView;
@@ -72,12 +71,12 @@ public class DialogCreate extends Dialog {
     /**
      * 构造方法
      *
-     * @param context 上下文环境
+     * @param mActivity 上下文环境
      * @param builder 创建者对象
      */
-    private DialogCreate(@NonNull Context context, Builder builder) {
-        super(context, builder.style);
-        this.mContext = context;
+    private DialogCreate(@NonNull Activity mActivity, Builder builder) {
+        super(mActivity, builder.style);
+        this.mActivity = mActivity;
         this.isHasCloseView = builder.isHasCloseView;
         this.isTranslucent = builder.isTranslucent;
         this.addViewId = builder.addViewId;
@@ -98,7 +97,7 @@ public class DialogCreate extends Dialog {
             View view = getWindow().getLayoutInflater().inflate(R.layout.dialog_textlist_final_dismiss, null);
             ivClose = view.findViewById(R.id.iv_close);
             LinearLayout llAddView = view.findViewById(R.id.ll_add_textview);
-            int width = (int) (dialogWidth * ScreenUtils.getScreenWidth(mContext));
+            int width = (int) (dialogWidth * ScreenUtils.getScreenWidth(mActivity));
             llAddView.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
             ll_dialog_view = view.findViewById(R.id.ll_dialog_view);
 //            setTitleHeight();
@@ -108,7 +107,7 @@ public class DialogCreate extends Dialog {
 
                 });
             }
-            View inflaterView = LayoutInflater.from(mContext).inflate(addViewId, llAddView, false);
+            View inflaterView = LayoutInflater.from(mActivity).inflate(addViewId, llAddView, false);
             this.inflaterView = inflaterView;
             llAddView.addView(inflaterView);
             setContentView(view);
@@ -149,8 +148,8 @@ public class DialogCreate extends Dialog {
      */
     private void setTitleHeight() {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, ScreenUtils.dp2px(mContext,titleHeight), 0, 0);
-        ll_dialog_view.setPadding(0, 0, 0, ScreenUtils.dp2px(mContext,titleHeight));
+        params.setMargins(0, ScreenUtils.dp2px(mActivity, titleHeight), 0, 0);
+        ll_dialog_view.setPadding(0, 0, 0, ScreenUtils.dp2px(mActivity, titleHeight));
         ll_dialog_view.setLayoutParams(params);
     }
 
@@ -164,6 +163,12 @@ public class DialogCreate extends Dialog {
         public void onClick(View v) {
             dismiss();
         }
+    }
+
+    @Override
+    public void show() {
+        if (!isDestroy(mActivity))
+            super.show();
     }
 
     /**
@@ -191,6 +196,21 @@ public class DialogCreate extends Dialog {
         DialogCreateSingleUtils.getInstance().showDialogMsg(this);
     }
 
+    /**
+     * 判断Activity是否Destroy
+     *
+     * @param mActivity Activity
+     * @return true:已销毁
+     */
+    public static boolean isDestroy(Activity mActivity) {
+        if (mActivity == null || mActivity.isFinishing() ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * builder创建者
@@ -201,7 +221,7 @@ public class DialogCreate extends Dialog {
         private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
         private View.OnClickListener closeViewOnClickListener;//下面的关闭按钮监听
         private boolean isTranslucent;//是否半透明
-        private Context mContext;//上下文
+        private Activity mActivity;//上下文
         private int style = R.style.AlertDialog;//半透明，透明指数：0.35;
         private int transparency;//透明度0~255透明度值 ，0为完全透明，255为不透明
         private boolean isCloseDialogInSide;//点击弹窗内面是否关闭弹窗
@@ -209,8 +229,8 @@ public class DialogCreate extends Dialog {
         private float titleHeight = 44;//标题栏高度
         private float dialogWidth = 1;//弹窗宽度
 
-        public Builder(Context context) {
-            this.mContext = context;
+        public Builder(Activity mActivity) {
+            this.mActivity = mActivity;
         }
 
         /**
@@ -331,7 +351,7 @@ public class DialogCreate extends Dialog {
          * @return 返回弹窗对象
          */
         public DialogCreate build() {
-            return new DialogCreate(mContext, this);
+            return new DialogCreate(mActivity, this);
         }
     }
 }

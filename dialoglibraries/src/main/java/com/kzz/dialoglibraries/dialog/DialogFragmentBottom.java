@@ -1,8 +1,9 @@
 package com.kzz.dialoglibraries.dialog;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,7 +28,7 @@ import com.kzz.dialoglibraries.R;
 
 @SuppressLint("ValidFragment")
 public class DialogFragmentBottom extends DialogFragment {
-    private Context mContext;
+    private Activity mActivity;
     private LinearLayout llAddTextView;
     private View inflaterView;
     private int addViewId;//插入的view的id
@@ -45,7 +46,7 @@ public class DialogFragmentBottom extends DialogFragment {
     public DialogFragmentBottom(Builder builder) {
         this.dialogSetDateInterface = builder.dialogSetDateInterface;
         this.addViewId = builder.addViewId;
-        this.mContext = builder.mContext;
+        this.mActivity = builder.mActivity;
         this.isVisitCancel = builder.isVisitCancel;
         this.cancelListener = builder.cancelListener;
     }
@@ -78,7 +79,7 @@ public class DialogFragmentBottom extends DialogFragment {
         tv_cancel = view.findViewById(R.id.tv_cancel);
         llAddTextView = view.findViewById(R.id.ll_add_textview);
         //将传进来的弹窗layout布局，加载到基础view中去。
-        View inflaterView = LayoutInflater.from(mContext).inflate(addViewId, llAddTextView, false);
+        View inflaterView = LayoutInflater.from(mActivity).inflate(addViewId, llAddTextView, false);
         this.inflaterView = inflaterView;
         llAddTextView.addView(inflaterView);
 
@@ -117,6 +118,12 @@ public class DialogFragmentBottom extends DialogFragment {
         }
     }
 
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        if (!isDestroy(mActivity))
+        super.show(manager, tag);
+    }
+
     /**
      * 使用单例模式弹出
      */
@@ -125,18 +132,33 @@ public class DialogFragmentBottom extends DialogFragment {
     }
 
     /**
+     * 判断Activity是否Destroy
+     *
+     * @param mActivity Activity
+     * @return true:已销毁
+     */
+    public static boolean isDestroy(Activity mActivity) {
+        if (mActivity == null || mActivity.isFinishing() ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * builder创建者
      */
     public static class Builder {
 
-        private Context mContext;
+        private Activity mActivity;
         private int addViewId;//插入的view的id
         private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
         private boolean isVisitCancel = true;//是否显示取消按钮,默认是显示的。
         private View.OnClickListener cancelListener;//取消按钮监听事件
 
-        public Builder(Context mContext) {
-            this.mContext = mContext;
+        public Builder(Activity mActivity) {
+            this.mActivity = mActivity;
         }
 
         /**
