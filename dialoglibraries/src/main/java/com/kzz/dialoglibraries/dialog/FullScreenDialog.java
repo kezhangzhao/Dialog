@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.R;
+import com.kzz.dialoglibraries.utils.ActivityUtils;
 
 /**
  * author : zhangzhao.ke
@@ -126,7 +127,7 @@ public class FullScreenDialog extends Dialog {
 
     @Override
     public void show() {
-        if (!isDestroy(mActivity))
+        if (!ActivityUtils.isDestroy(mActivity))
             super.show();
     }
 
@@ -145,22 +146,6 @@ public class FullScreenDialog extends Dialog {
             lp.width = display.getWidth(); //设置宽度
             lp.height = ViewGroup.LayoutParams.FILL_PARENT;
             getWindow().setAttributes(lp);
-        }
-    }
-
-
-    /**
-     * 判断Activity是否Destroy
-     *
-     * @param mActivity Activity
-     * @return true:已销毁
-     */
-    public static boolean isDestroy(Activity mActivity) {
-        if (mActivity == null || mActivity.isFinishing() ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
-            return true;
-        } else {
-            return false;
         }
     }
 

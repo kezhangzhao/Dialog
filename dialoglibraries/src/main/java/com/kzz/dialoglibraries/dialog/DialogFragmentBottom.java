@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.R;
+import com.kzz.dialoglibraries.utils.ActivityUtils;
 
 /**
  * 自定义底部弹窗（从手机端底部弹起）
@@ -120,7 +121,7 @@ public class DialogFragmentBottom extends DialogFragment {
 
     @Override
     public void show(FragmentManager manager, String tag) {
-        if (!isDestroy(mActivity))
+        if (!ActivityUtils.isDestroy(mActivity))
         super.show(manager, tag);
     }
 
@@ -129,21 +130,6 @@ public class DialogFragmentBottom extends DialogFragment {
      */
     public void showSingle(@NonNull FragmentManager manager, @Nullable String tag) {
         DialogFragmentBottomSingleUtils.getInstance().showDialogMsg(this,manager,tag);
-    }
-
-    /**
-     * 判断Activity是否Destroy
-     *
-     * @param mActivity Activity
-     * @return true:已销毁
-     */
-    public static boolean isDestroy(Activity mActivity) {
-        if (mActivity == null || mActivity.isFinishing() ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**

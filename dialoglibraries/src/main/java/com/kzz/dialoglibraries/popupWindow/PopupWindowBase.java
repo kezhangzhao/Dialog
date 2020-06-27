@@ -1,6 +1,6 @@
 package com.kzz.dialoglibraries.popupWindow;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.DialogShowingInterface;
 import com.kzz.dialoglibraries.R;
+import com.kzz.dialoglibraries.utils.ActivityUtils;
 
 
 /**
@@ -21,7 +22,7 @@ import com.kzz.dialoglibraries.R;
 public class PopupWindowBase {
 
     private PopupWindow popupWindow;
-    private Context mContext;
+    private Activity mActivity;
     private View parentView;
     private int addViewId;
     private int backgroundResource = R.color.blace_66000000;
@@ -56,22 +57,22 @@ public class PopupWindowBase {
     /**
      * 构造方法
      *
-     * @param mContext   上下文
+     * @param activity   Activity
      * @param parentView 显示在哪个view的下面
      * @param addViewId  插入显示的view
      */
-    public PopupWindowBase(Context mContext, View parentView, int addViewId) {
-        this.mContext = mContext;
+    public PopupWindowBase(Activity activity, View parentView, int addViewId) {
+        this.mActivity = activity;
         this.parentView = parentView;
         this.addViewId = addViewId;
     }
 
     public void create() {
 
-        View baseView = LayoutInflater.from(mContext).inflate(R.layout.popup_window_base, null);
+        View baseView = LayoutInflater.from(mActivity).inflate(R.layout.popup_window_base, null);
         popupWindow = new PopupWindow(baseView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         LinearLayout llBaseView = baseView.findViewById(R.id.ll_base_view);
-        View inflaterView = LayoutInflater.from(mContext).inflate(addViewId, llBaseView, false);
+        View inflaterView = LayoutInflater.from(mActivity).inflate(addViewId, llBaseView, false);
         if (getCallback() != null)
             getCallback().setDate(inflaterView);
         llBaseView.addView(inflaterView);
@@ -88,6 +89,7 @@ public class PopupWindowBase {
             if (getShowingInterface() != null)
                 getShowingInterface().setShowing(false);
         });
+        if (!ActivityUtils.isDestroy(mActivity))
         showAsDropDown(parentView, 0, 0);
 
     }

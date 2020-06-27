@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.R;
+import com.kzz.dialoglibraries.utils.ActivityUtils;
 import com.kzz.dialoglibraries.utils.ScreenUtils;
 
 /**
@@ -167,7 +168,7 @@ public class DialogCreate extends Dialog {
 
     @Override
     public void show() {
-        if (!isDestroy(mActivity))
+        if (!ActivityUtils.isDestroy(mActivity))
             super.show();
     }
 
@@ -196,20 +197,6 @@ public class DialogCreate extends Dialog {
         DialogCreateSingleUtils.getInstance().showDialogMsg(this);
     }
 
-    /**
-     * 判断Activity是否Destroy
-     *
-     * @param mActivity Activity
-     * @return true:已销毁
-     */
-    public static boolean isDestroy(Activity mActivity) {
-        if (mActivity == null || mActivity.isFinishing() ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
     /**
