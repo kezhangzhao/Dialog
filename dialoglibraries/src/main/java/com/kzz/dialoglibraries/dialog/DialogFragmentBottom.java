@@ -29,7 +29,7 @@ import com.kzz.dialoglibraries.utils.ActivityUtils;
 
 @SuppressLint("ValidFragment")
 public class DialogFragmentBottom extends DialogFragment {
-    private Activity mActivity;
+    protected Activity mActivity;
     private LinearLayout llAddTextView;
     private View inflaterView;
     private int addViewId;//插入的view的id

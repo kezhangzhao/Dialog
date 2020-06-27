@@ -27,7 +27,7 @@ import com.kzz.dialoglibraries.utils.ScreenUtils;
 
 public class DialogCreate extends Dialog {
 
-    private Activity mActivity;//上下文
+    protected Activity mActivity;//上下文
     private int addViewId;//插入的view的id
     private View inflaterView;//插入的view
     private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口

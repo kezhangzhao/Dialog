@@ -21,8 +21,8 @@ import com.kzz.dialoglibraries.utils.ActivityUtils;
  */
 public class PopupWindowBase {
 
-    private PopupWindow popupWindow;
-    private Activity mActivity;
+    protected PopupWindow popupWindow;
+    protected Activity mActivity;
     private View parentView;
     private int addViewId;
     private int backgroundResource = R.color.blace_66000000;
