@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity {
                     TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
                     tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
                     tvConfirm.setOnClickListener(v -> {
-                        mDialogCreate.dismiss();
+                        mDialogBottom.dismiss();
                         Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
                     });
                     tvCancel.setOnClickListener(v -> {
-                        mDialogCreate.dismiss();
+                        mDialogBottom.dismiss();
                         Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
                     });
                 })
