@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDialogBottom() {
-        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder(mActivity);
+        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder();
         mDialogBottom = builder
                 .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsVisitCancel(false)
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 })
                 .build();
-        mDialogBottom.showSingle(getSupportFragmentManager(), "MainActivity");
+        mDialogBottom.showSingle(this,getSupportFragmentManager(), "MainActivity");
     }
 
     /**
