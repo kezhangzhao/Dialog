@@ -2,6 +2,7 @@ package com.kzz.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
                     tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
                     tvConfirm.setOnClickListener(v -> {
-                        mDialogBottom.dismiss();
+                        startActivity(new Intent(this,TestActivity.class));
                         Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
                     });
                     tvCancel.setOnClickListener(v -> {

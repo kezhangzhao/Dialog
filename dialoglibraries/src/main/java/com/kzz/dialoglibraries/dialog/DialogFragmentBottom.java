@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -50,7 +52,7 @@ public class DialogFragmentBottom extends DialogFragment {
      */
     public static DialogFragmentBottom newInstance(Builder builder) {
         Bundle args = new Bundle();
-        args.putSerializable("Builder", builder);
+        args.putParcelable("Builder", builder);
         DialogFragmentBottom fragmentBottom = new DialogFragmentBottom();
         fragmentBottom.setArguments(args);
         return fragmentBottom;
@@ -60,7 +62,7 @@ public class DialogFragmentBottom extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            Builder builder = (Builder) savedInstanceState.getSerializable("Builder");
+            Builder builder = savedInstanceState.getParcelable("Builder");
             if (builder != null) {
                 this.dialogSetDateInterface = builder.dialogSetDateInterface;
                 this.addViewId = builder.addViewId;
@@ -94,7 +96,7 @@ public class DialogFragmentBottom extends DialogFragment {
         //获取底部弹窗的view，默认带有取消按钮
         final View view = inflater.inflate(R.layout.dialog_bottomdialog_base, null);
         if (getArguments() != null) {
-            Builder builder = (Builder) getArguments().getSerializable("Builder");
+            Builder builder = getArguments().getParcelable("Builder");
             if (builder != null) {
                 this.dialogSetDateInterface = builder.dialogSetDateInterface;
                 this.addViewId = builder.addViewId;
@@ -161,7 +163,7 @@ public class DialogFragmentBottom extends DialogFragment {
     /**
      * builder创建者
      */
-    public static class Builder implements Serializable {
+    public static class Builder implements Parcelable {
 
         private int addViewId;//插入的view的id
         private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
@@ -170,6 +172,23 @@ public class DialogFragmentBottom extends DialogFragment {
 
         public Builder() {
         }
+
+        protected Builder(Parcel in) {
+            addViewId = in.readInt();
+            isVisitCancel = in.readByte() != 0;
+        }
+
+        public static final Creator<Builder> CREATOR = new Creator<Builder>() {
+            @Override
+            public Builder createFromParcel(Parcel in) {
+                return new Builder(in);
+            }
+
+            @Override
+            public Builder[] newArray(int size) {
+                return new Builder[size];
+            }
+        };
 
         /**
          * 设置：插入的弹窗viewId
@@ -222,6 +241,17 @@ public class DialogFragmentBottom extends DialogFragment {
          */
         public DialogFragmentBottom build() {
             return DialogFragmentBottom.newInstance(this);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(addViewId);
+            parcel.writeByte((byte) (isVisitCancel ? 1 : 0));
         }
     }
 }
