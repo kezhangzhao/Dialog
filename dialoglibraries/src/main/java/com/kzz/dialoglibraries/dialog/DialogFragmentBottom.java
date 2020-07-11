@@ -3,7 +3,6 @@ package com.kzz.dialoglibraries.dialog;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,8 @@ import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.R;
 import com.kzz.dialoglibraries.utils.ActivityUtils;
 
+import java.io.Serializable;
+
 /**
  * 自定义底部弹窗（从手机端底部弹起）
  * Created by kezhangzhao on 2018/3/28.
@@ -29,7 +30,7 @@ import com.kzz.dialoglibraries.utils.ActivityUtils;
 
 @SuppressLint("ValidFragment")
 public class DialogFragmentBottom extends DialogFragment {
-    protected Activity mActivity;
+
     private LinearLayout llAddTextView;
     private View inflaterView;
     private int addViewId;//插入的view的id
@@ -39,19 +40,35 @@ public class DialogFragmentBottom extends DialogFragment {
     private View.OnClickListener cancelListener;//取消按钮监听事件，默认情况是只取消dialog
     private TextView tv_cancel;//取消按钮控件
 
+    public DialogFragmentBottom() {
+    }
+
     /**
      * 构造方法
      *
      * @param builder 创建者
      */
-    public DialogFragmentBottom(Builder builder) {
-        this.dialogSetDateInterface = builder.dialogSetDateInterface;
-        this.addViewId = builder.addViewId;
-        this.mActivity = builder.mActivity;
-        this.isVisitCancel = builder.isVisitCancel;
-        this.cancelListener = builder.cancelListener;
+    public static DialogFragmentBottom newInstance(Builder builder) {
+        Bundle args = new Bundle();
+        args.putSerializable("Builder", builder);
+        DialogFragmentBottom fragmentBottom = new DialogFragmentBottom();
+        fragmentBottom.setArguments(args);
+        return fragmentBottom;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Builder builder = (Builder) savedInstanceState.getSerializable("Builder");
+            if (builder != null) {
+                this.dialogSetDateInterface = builder.dialogSetDateInterface;
+                this.addViewId = builder.addViewId;
+                this.isVisitCancel = builder.isVisitCancel;
+                this.cancelListener = builder.cancelListener;
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -76,16 +93,25 @@ public class DialogFragmentBottom extends DialogFragment {
         }
         //获取底部弹窗的view，默认带有取消按钮
         final View view = inflater.inflate(R.layout.dialog_bottomdialog_base, null);
-        ll_cancel = view.findViewById(R.id.ll_cancel);
-        tv_cancel = view.findViewById(R.id.tv_cancel);
-        llAddTextView = view.findViewById(R.id.ll_add_textview);
-        //将传进来的弹窗layout布局，加载到基础view中去。
-        View inflaterView = LayoutInflater.from(mActivity).inflate(addViewId, llAddTextView, false);
-        this.inflaterView = inflaterView;
-        llAddTextView.addView(inflaterView);
+        if (getArguments() != null) {
+            Builder builder = (Builder) getArguments().getSerializable("Builder");
+            if (builder != null) {
+                this.dialogSetDateInterface = builder.dialogSetDateInterface;
+                this.addViewId = builder.addViewId;
+                this.isVisitCancel = builder.isVisitCancel;
+                this.cancelListener = builder.cancelListener;
 
-        initDate();//初始化：数据、监听、布局
+                ll_cancel = view.findViewById(R.id.ll_cancel);
+                tv_cancel = view.findViewById(R.id.tv_cancel);
+                llAddTextView = view.findViewById(R.id.ll_add_textview);
+                //将传进来的弹窗layout布局，加载到基础view中去。
+                View inflaterView = LayoutInflater.from(getActivity()).inflate(addViewId, llAddTextView, false);
+                this.inflaterView = inflaterView;
+                llAddTextView.addView(inflaterView);
 
+                initDate();//初始化：数据、监听、布局
+            }
+        }
         return view;
     }
 
@@ -119,32 +145,30 @@ public class DialogFragmentBottom extends DialogFragment {
         }
     }
 
-    @Override
-    public void show(FragmentManager manager, String tag) {
-        if (!ActivityUtils.isDestroy(mActivity))
-        super.show(manager, tag);
+
+    public void show(Activity activity, FragmentManager manager, String tag) {
+        if (!ActivityUtils.isDestroy(activity))
+            super.show(manager, tag);
     }
 
     /**
      * 使用单例模式弹出
      */
-    public void showSingle(@NonNull FragmentManager manager, @Nullable String tag) {
-        DialogFragmentBottomSingleUtils.getInstance().showDialogMsg(this,manager,tag);
+    public void showSingle(Activity activity, @NonNull FragmentManager manager, @Nullable String tag) {
+        DialogFragmentBottomSingleUtils.getInstance().showDialogMsg(activity, this, manager, tag);
     }
 
     /**
      * builder创建者
      */
-    public static class Builder {
+    public static class Builder implements Serializable {
 
-        private Activity mActivity;
         private int addViewId;//插入的view的id
         private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
         private boolean isVisitCancel = true;//是否显示取消按钮,默认是显示的。
         private View.OnClickListener cancelListener;//取消按钮监听事件
 
-        public Builder(Activity mActivity) {
-            this.mActivity = mActivity;
+        public Builder() {
         }
 
         /**
@@ -197,7 +221,7 @@ public class DialogFragmentBottom extends DialogFragment {
          * @return DialogFragmentBottom
          */
         public DialogFragmentBottom build() {
-            return new DialogFragmentBottom(this);
+            return DialogFragmentBottom.newInstance(this);
         }
     }
 }

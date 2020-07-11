@@ -1,5 +1,6 @@
 package com.kzz.dialoglibraries.dialog;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -25,10 +26,10 @@ public class DialogFragmentBottomSingleUtils {
         return instance;
     }
 
-    void showDialogMsg(DialogFragmentBottom dialog, @NonNull FragmentManager manager, @Nullable String tag) {
+    void showDialogMsg(Activity activity,DialogFragmentBottom dialog, @NonNull FragmentManager manager, @Nullable String tag) {
         if (mDialogFragmentBottom == null || mDialogFragmentBottom.getDialog() == null || !mDialogFragmentBottom.getDialog().isShowing()) {
             mDialogFragmentBottom = dialog;
-            mDialogFragmentBottom.show(manager, tag);
+            mDialogFragmentBottom.show(activity,manager, tag);
         }
     }
 
