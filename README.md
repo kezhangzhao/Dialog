@@ -63,31 +63,24 @@
         popupWindowBase.create();
 	
 # 3、DialogFragmentBottom使用方法
-        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder(mActivity);
-        dialogBottom = builder.setAddViewId(R.layout.dialog_select)
+        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder();
+        mDialogBottom = builder
+                .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsVisitCancel(false)
+//                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
                 .setDialogSetDateInterface(inflaterView -> {
-                    List<String> listStr = new ArrayList<>();
-                    listStr.add("拍照");
-                    listStr.add("从相册上传");
-                    ListView listView = inflaterView.findViewById(R.id.lv_dialog_select_listview);
-                    listView.setAdapter(new CommonLvAdapter<String>(mActivity, R.layout.dialog_select_listview_item, listStr) {
-                        @Override
-                        protected void convert(ViewHolderLv viewHolder, String item, int position) {
-                            viewHolder.setText(R.id.tv_dialog_select_item, listStr.get(position));
-                        }
+                    TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
+                    TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
+                    TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
+                    tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
+                    tvConfirm.setOnClickListener(v -> {
+                        mDialogBottom.dismiss();
+                        Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
                     });
-                    TextView tvCancel = inflaterView.findViewById(R.id.tv_dialog_select_cancel);
-                    tvCancel.setOnClickListener(v -> dialogBottom.dismiss());
-                    listView.setOnItemClickListener((parent, view, position, id) -> {
-                        if (position == 0) {//拍照
-                            PicSelectUtils.startCamera(mActivity, true, selectList);
-                        } else if (position == 1) {//从相册上传
-                            PicSelectUtils.startPhoto(mActivity, 1, PictureConfig.MULTIPLE, true, false, selectList);
-                        }
-                        dialogBottom.dismiss();
+                    tvCancel.setOnClickListener(v -> {
+                        mDialogBottom.dismiss();
+                        Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
                     });
-
-                }).build();
-
-        dialogBottom.show(getSupportFragmentManager(), "FeedBackActivity");
+                })
+                .build();
+        mDialogBottom.showSingle(this,getSupportFragmentManager(), "MainActivity");
