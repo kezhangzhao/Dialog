@@ -56,7 +56,7 @@ public class DialogCreate extends Dialog {
     /**
      * 构造方法
      *
-     * @param mActivity          上下文环境
+     * @param mActivity        上下文环境
      * @param addViewId        自定义的布局，将此布局插入到dialog中显示
      * @param setDateInterface 设置：插入布局中的控件、数据更改显示
      * @param isHasCloseView   是否要底部的关闭按钮
@@ -73,7 +73,7 @@ public class DialogCreate extends Dialog {
      * 构造方法
      *
      * @param mActivity 上下文环境
-     * @param builder 创建者对象
+     * @param builder   创建者对象
      */
     private DialogCreate(@NonNull Activity mActivity, Builder builder) {
         super(mActivity, builder.style);
@@ -172,6 +172,16 @@ public class DialogCreate extends Dialog {
             super.show();
     }
 
+    @Override
+    public void dismiss() {
+        try {
+            if (!ActivityUtils.isDestroy(mActivity))
+                super.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
     /**
      * 充满屏幕显示dialog
      * show:显示dialog（自定义透明度的得用这个方法，不能用show,不然屏幕不能充满）
@@ -196,7 +206,6 @@ public class DialogCreate extends Dialog {
     public void showSingle() {
         DialogCreateSingleUtils.getInstance().showDialogMsg(this);
     }
-
 
 
     /**

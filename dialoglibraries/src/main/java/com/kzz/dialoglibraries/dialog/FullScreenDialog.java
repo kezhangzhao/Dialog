@@ -131,6 +131,16 @@ public class FullScreenDialog extends Dialog {
             super.show();
     }
 
+    @Override
+    public void dismiss() {
+        try {
+            if (!ActivityUtils.isDestroy(mActivity))
+                super.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
     /**
      * 充满屏幕显示dialog
      * show:显示dialog（自定义透明度的得用这个方法，不能用show,不然屏幕不能充满）

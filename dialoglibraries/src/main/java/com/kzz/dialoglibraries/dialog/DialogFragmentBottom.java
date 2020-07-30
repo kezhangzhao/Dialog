@@ -2,6 +2,7 @@ package com.kzz.dialoglibraries.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -151,6 +152,16 @@ public class DialogFragmentBottom extends DialogFragment {
     public void show(Activity activity, FragmentManager manager, String tag) {
         if (!ActivityUtils.isDestroy(activity))
             super.show(manager, tag);
+    }
+
+    @Override
+    public void dismiss() {
+        try {
+            if (!ActivityUtils.isDestroy(getActivity()))
+                super.dismiss();
+        } catch (Exception e) {
+
+        }
     }
 
     /**
