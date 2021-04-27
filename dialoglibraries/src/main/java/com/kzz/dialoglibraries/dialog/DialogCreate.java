@@ -2,7 +2,6 @@ package com.kzz.dialoglibraries.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Display;
@@ -126,7 +125,7 @@ public class DialogCreate extends Dialog {
         } else {
             ivClose.setVisibility(View.GONE);
         }
-        dialogSetDateInterface.setDate(inflaterView);
+        dialogSetDateInterface.setDate(inflaterView,this);
         ll_dialog_view.getBackground().setAlpha(transparency);
     }
 

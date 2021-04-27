@@ -1,6 +1,8 @@
 package com.kzz.dialoglibraries;
 
+import android.app.Dialog;
 import android.view.View;
+
 
 /**
  * Created by kezhangzhao on 2018/3/28.
@@ -8,5 +10,5 @@ import android.view.View;
  */
 
 public interface DialogSetDateInterface {
-    void setDate(View inflaterView);
+    void setDate(View inflaterView, Dialog dialog);
 }

@@ -3,14 +3,19 @@ package com.kzz.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kzz.dialoglibraries.DialogBottomSetDateInterface;
+import com.kzz.dialoglibraries.DialogPopuSetDateInterface;
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.dialog.DialogCreate;
 import com.kzz.dialoglibraries.dialog.DialogFragmentBottom;
@@ -45,53 +50,72 @@ public class MainActivity extends AppCompatActivity {
      * 提交没有网络的时候弹窗
      */
     private void showNoNetworkDialog() {
-        DialogCreate.Builder builder = new DialogCreate.Builder(mActivity);
-        mDialogCreate = builder
+//        DialogCreate.Builder builder = new DialogCreate.Builder(mActivity);
+//        mDialogCreate = builder
+        new DialogCreate.Builder(mActivity)
                 .setAddViewId(R.layout.dialog_contact_phone)
 //                .setStyle(R.style.AlertDialogFullscreen)//activity全屏的时候要设置这个style
                 .setIsHasCloseView(false)
                 .setDialogWidth((float) (ScreenUtils.getScreenWidth(this) - ScreenUtils.dp2px(this, 60)) / ScreenUtils.getScreenWidth(this))
 //                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
-                .setDialogSetDateInterface(inflaterView -> {
+                .setDialogSetDateInterface((inflaterView, dialogCreate) -> {
                     TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
                     TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
                     TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
                     tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
                     tvConfirm.setOnClickListener(v -> {
-                        mDialogCreate.dismiss();
-                        Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
+                        dialogCreate.dismiss();
+                        Toast.makeText(mActivity, "确认", Toast.LENGTH_SHORT).show();
                     });
                     tvCancel.setOnClickListener(v -> {
-                        mDialogCreate.dismiss();
-                        Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
+                        dialogCreate.dismiss();
+                        Toast.makeText(mActivity, "取消", Toast.LENGTH_SHORT).show();
                     });
                 })
-                .build();
-        mDialogCreate.showSingle();
+//                .setDialogSetDateInterface(inflaterView -> {
+//                    TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
+//                    TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
+//                    TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
+//                    tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
+//                    tvConfirm.setOnClickListener(v -> {
+//                        mDialogCreate.dismiss();
+//                        Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
+//                    });
+//                    tvCancel.setOnClickListener(v -> {
+//                        mDialogCreate.dismiss();
+//                        Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
+//                    });
+//                })
+                .build().showSingle();
+//        mDialogCreate.showSingle();
     }
 
     private void showDialogBottom() {
-        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder();
-        mDialogBottom = builder
+//        DialogFragmentBottom.Builder builder = new DialogFragmentBottom.Builder();
+//        mDialogBottom = builder
+        new DialogFragmentBottom.Builder()
                 .setAddViewId(R.layout.dialog_contact_phone)
                 .setIsVisitCancel(false)
 //                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
-                .setDialogSetDateInterface(inflaterView -> {
-                    TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
-                    TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
-                    TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
-                    tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
-                    tvConfirm.setOnClickListener(v -> {
-                        startActivity(new Intent(this,TestActivity.class));
-                        Toast.makeText(this, "确认", Toast.LENGTH_SHORT).show();
-                    });
-                    tvCancel.setOnClickListener(v -> {
-                        mDialogBottom.dismiss();
-                        Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
-                    });
+                .setDialogSetDateInterface(new DialogBottomSetDateInterface() {
+                    @Override
+                    public void setDate(View inflaterView, DialogFragment dialog) {
+                        TextView tvMsg = inflaterView.findViewById(R.id.tv_dialog_msg);
+                        TextView tvCancel = inflaterView.findViewById(R.id.tv_cancel);
+                        TextView tvConfirm = inflaterView.findViewById(R.id.tv_confirm);
+                        tvMsg.setText("当前无网络，将自动保存！\n请待有网络后提交。");
+                        tvConfirm.setOnClickListener(v -> {
+                            startActivity(new Intent(mActivity, TestActivity.class));
+                            Toast.makeText(mActivity, "确认", Toast.LENGTH_SHORT).show();
+                        });
+                        tvCancel.setOnClickListener(v -> {
+                            dialog.dismiss();
+                            Toast.makeText(mActivity, "取消", Toast.LENGTH_SHORT).show();
+                        });
+                    }
                 })
-                .build();
-        mDialogBottom.showSingle(this,getSupportFragmentManager(), "MainActivity");
+                .build().showSingle(this, getSupportFragmentManager(), "MainActivity");
+//        mDialogBottom.showSingle(this,getSupportFragmentManager(), "MainActivity");
     }
 
     /**
@@ -99,14 +123,16 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showPopupWindow() {
         PopupWindowBase popupWindowBase = new PopupWindowBase(mActivity, btPopupWindow, R.layout.pop_seletct);
-        DialogSetDateInterface dialogSetDateInterface = inflaterView -> {
-            TextView tv001 = inflaterView.findViewById(R.id.tv_001);
-            TextView tv002 = inflaterView.findViewById(R.id.tv_002);
-            TextView tv003 = inflaterView.findViewById(R.id.tv_003);
-            tv001.setOnClickListener(view -> Toast.makeText(mActivity, "tv001", Toast.LENGTH_SHORT).show());
-            tv002.setOnClickListener(view -> Toast.makeText(mActivity, "tv002", Toast.LENGTH_SHORT).show());
-            tv003.setOnClickListener(view -> Toast.makeText(mActivity, "tv003", Toast.LENGTH_SHORT).show());
-
+        DialogPopuSetDateInterface dialogSetDateInterface = new DialogPopuSetDateInterface() {
+            @Override
+            public void setDate(View inflaterView, PopupWindow popupWindow) {
+                TextView tv001 = inflaterView.findViewById(R.id.tv_001);
+                TextView tv002 = inflaterView.findViewById(R.id.tv_002);
+                TextView tv003 = inflaterView.findViewById(R.id.tv_003);
+                tv001.setOnClickListener(view -> Toast.makeText(mActivity, "tv001", Toast.LENGTH_SHORT).show());
+                tv002.setOnClickListener(view -> Toast.makeText(mActivity, "tv002", Toast.LENGTH_SHORT).show());
+                tv003.setOnClickListener(view -> Toast.makeText(mActivity, "tv003", Toast.LENGTH_SHORT).show());
+            }
         };
 //        popupWindowBase.setBackgroundResource(R.color.blace_00000000);
         popupWindowBase.setShowingInterface(isShowing -> {

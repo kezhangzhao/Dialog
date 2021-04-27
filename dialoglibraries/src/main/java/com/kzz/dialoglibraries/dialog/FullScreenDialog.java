@@ -91,7 +91,7 @@ public class FullScreenDialog extends Dialog {
      * inflaterView 插入的布局view 对象。
      */
     private void initDate() {
-        dialogSetDateInterface.setDate(inflaterView);
+        dialogSetDateInterface.setDate(inflaterView,this);
     }
 
     /**

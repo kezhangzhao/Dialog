@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kzz.dialoglibraries.DialogBottomSetDateInterface;
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.R;
 import com.kzz.dialoglibraries.utils.ActivityUtils;
@@ -37,7 +38,7 @@ public class DialogFragmentBottom extends DialogFragment {
     private LinearLayout llAddTextView;
     private View inflaterView;
     private int addViewId;//插入的view的id
-    private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
+    private DialogBottomSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
     private LinearLayout ll_cancel;//取消按钮的布局
     private boolean isVisitCancel;//是否显示取消按钮,默认情况是显示
     private View.OnClickListener cancelListener;//取消按钮监听事件，默认情况是只取消dialog
@@ -125,7 +126,7 @@ public class DialogFragmentBottom extends DialogFragment {
     public void initDate() {
         //设置回调，inflaterView用来对传进来的弹窗layout布局进行控件的操作
         if (dialogSetDateInterface != null)
-            dialogSetDateInterface.setDate(inflaterView);
+            dialogSetDateInterface.setDate(inflaterView,this);
         //初始化监听，取消按钮是否显示
         if (cancelListener != null) {
             tv_cancel.setOnClickListener(cancelListener);
@@ -177,7 +178,7 @@ public class DialogFragmentBottom extends DialogFragment {
     public static class Builder implements Parcelable {
 
         private int addViewId;//插入的view的id
-        private DialogSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
+        private DialogBottomSetDateInterface dialogSetDateInterface;//设置：插入布局中的控件、数据更改显示的接口
         private boolean isVisitCancel = true;//是否显示取消按钮,默认是显示的。
         private View.OnClickListener cancelListener;//取消按钮监听事件
 
@@ -218,7 +219,7 @@ public class DialogFragmentBottom extends DialogFragment {
          * @param dialogSetDateInterface DialogSetDateInterface
          * @return Builder
          */
-        public Builder setDialogSetDateInterface(DialogSetDateInterface dialogSetDateInterface) {
+        public Builder setDialogSetDateInterface(DialogBottomSetDateInterface dialogSetDateInterface) {
             this.dialogSetDateInterface = dialogSetDateInterface;
             return this;
         }

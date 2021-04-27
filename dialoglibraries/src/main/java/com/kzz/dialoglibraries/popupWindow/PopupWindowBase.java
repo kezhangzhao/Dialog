@@ -10,6 +10,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.kzz.dialoglibraries.DialogPopuSetDateInterface;
 import com.kzz.dialoglibraries.DialogSetDateInterface;
 import com.kzz.dialoglibraries.DialogShowingInterface;
 import com.kzz.dialoglibraries.R;
@@ -27,14 +28,14 @@ public class PopupWindowBase {
     private int addViewId;
     private int backgroundResource = R.color.blace_66000000;
 
-    protected DialogSetDateInterface callback;
+    protected DialogPopuSetDateInterface callback;
     protected DialogShowingInterface showingInterface;
 
-    public DialogSetDateInterface getCallback() {
+    public DialogPopuSetDateInterface getCallback() {
         return callback;
     }
 
-    public void setCallback(DialogSetDateInterface callback) {
+    public void setCallback(DialogPopuSetDateInterface callback) {
         this.callback = callback;
     }
 
@@ -74,7 +75,7 @@ public class PopupWindowBase {
         LinearLayout llBaseView = baseView.findViewById(R.id.ll_base_view);
         View inflaterView = LayoutInflater.from(mActivity).inflate(addViewId, llBaseView, false);
         if (getCallback() != null)
-            getCallback().setDate(inflaterView);
+            getCallback().setDate(inflaterView,popupWindow);
         llBaseView.addView(inflaterView);
         llBaseView.setBackgroundResource(getBackgroundResource());
         llBaseView.setOnClickListener(v -> dismiss());
