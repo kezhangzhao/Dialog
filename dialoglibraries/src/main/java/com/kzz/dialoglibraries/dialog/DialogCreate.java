@@ -257,6 +257,16 @@ public class DialogCreate extends Dialog {
         }
 
         /**
+         * 设置弹窗风格style
+         * @param style 弹窗风格style
+         * @return Builder
+         */
+        public Builder setStyle(int style) {
+            this.style = style;
+            return this;
+        }
+
+        /**
          * 设置：插入的弹窗viewId
          *
          * @param addViewId 插入的弹窗viewId
