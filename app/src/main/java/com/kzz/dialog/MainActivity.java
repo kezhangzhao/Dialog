@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         DialogCreate.Builder builder = new DialogCreate.Builder(mActivity);
         mDialogCreate = builder
                 .setAddViewId(R.layout.dialog_contact_phone)
+//                .setStyle(R.style.AlertDialogFullscreen)//activity全屏的时候要设置这个style
                 .setIsHasCloseView(false)
                 .setDialogWidth((float) (ScreenUtils.getScreenWidth(this) - ScreenUtils.dp2px(this, 60)) / ScreenUtils.getScreenWidth(this))
 //                .setTransparency(150)//默认：全屏dialog，如果设置这个透明度值后，上面的标题栏则不会被dialog挡住。
